@@ -7,7 +7,7 @@ from torch.utils.data import TensorDataset
 
 
 def load():
-    file = open(os.path.join("datasets", "emotions.arff"), "r")
+    file = open(os.path.join("datasets", "CAL500.arff"), "r")
 
     decoder = arff.ArffDecoder()
     draft = decoder.decode(file)
@@ -16,19 +16,20 @@ def load():
 
     data = numpy.array(draft['data'], dtype=numpy.float32)
 
-    x = data[:, 0: 72]
-    y = data[:, 72: 78]
+    x = data[:, 0: 68]
+    y = data[:, 68: 242]
+    number_instance = x[:, 0].size
 
     # flags数据集
-    # x = data[:, 0: 10]  # print(features.shape)  (593, 72)
-    # y = data[:, 10: 17]  # print(labels.shape)  (593, 6)
+    # x = data[:, 0: 14]  # print(features.shape)  (593, 72)
+    # y = data[:, 14: 26]  # print(labels.shape)  (593, 6)
 
     x = preprocessing.scale(x)
 
     """
-    计算pairwise距离
-    :param x: 矩阵matrix
-    :return: 距离
+    compute instances distance
+    :param x: matrix
+    :return: distance
     """
     sum_x = np.sum(np.square(x), 1)
     dist = np.add(np.add(-2 * np.dot(x, x.T), sum_x).T, sum_x)
@@ -44,7 +45,8 @@ def load():
                 dist[i][j] = 0
     # print("第二步，邻接矩阵构建完成\n")
     # print("sum(dist[20]):", dist[20])
-    return dist, x, y
+    return dist, x, y, number_instance
+
 
 '''
 accuracy输入为分类的最后一层输出，与label进行比较，然后计算准确率

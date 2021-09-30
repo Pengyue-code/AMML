@@ -8,34 +8,36 @@ from utils import load, accuracy
 from torch.autograd import Variable
 import torch.nn.functional as F
 
-dist, features, labels = load()
+dist, features, labels, samples = load()
 dist = torch.from_numpy(dist).type(torch.float32)
 features = torch.from_numpy(features).type(torch.float32)
 labels = torch.from_numpy(labels).type(torch.float32)
 
 # loss_f = torch.nn.BCELoss()
 
-epochs = 10000
-lr = 1e-4
+epochs = 100
+lr = 1e-1
 alpha = 0.15
 dropout = 0.5
 h_dimension = features.shape[1]
 n_hid = 9
 n_class = labels.shape[1]
+r1 = 0.5
+r2 = 0.3
+r3 = 0.2
 
-model = GraphAttentionLayer(in_features=h_dimension,
-                out_features=n_hid,
-                alpha=alpha,
-                dropout=dropout,
-                num_classes=n_class)
+model = GraphAttentionLayer(in_features=h_dimension, out_features=n_hid, alpha=alpha, dropout=dropout, num_classes=n_class)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 loss_f = torch.nn.BCEWithLogitsLoss()
 
 Sigmoid_fun = nn.Sigmoid()
 
-idx_train = range(100)  # 0~139
-idx_val = range(100, 400)  # 200~499
-idx_test = range(500, 550)  # 500~1499
+num_train = int(samples * r1)
+num_test = samples - int(samples * r3)
+
+idx_train = range(num_train)  # 0~139
+idx_val = range(num_train, num_test)  # 200~499
+idx_test = range(num_test, samples)  # 500~1499
 idx_train = torch.LongTensor(idx_train)
 idx_val = torch.LongTensor(idx_val)
 idx_test = torch.LongTensor(idx_test)

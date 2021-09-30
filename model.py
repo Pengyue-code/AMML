@@ -25,7 +25,7 @@ class GraphAttentionLayer(nn.Module):
         # print(indices.shape)  # (593, 10), h=torch.Size([6, 72])
         # formula 1
         # print("W", self.W.shape)  # torch.Size([72, 9])
-        Wh = torch.matmul(h, self.W)  # 593*8
+        Wh = torch.mm(h, self.W)  # 593*8
         Wh1 = torch.matmul(Wh, self.a[:self.out_features, :])  # torch.Size([6, 1])
         Wh2 = torch.matmul(Wh, self.a[self.out_features:, :])  # torch.Size([6, 1])
         # print(Wh1.shape)  # torch.Size([6, 1])

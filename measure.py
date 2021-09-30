@@ -138,4 +138,4 @@ logit = np.array([[0.3, 0.4, 0.5, 0.1, 0.15]])
 label = np.array([[1, 0, 1, 0, 0]])
 pred = np.array([[0, 1, 1, 0, 0]])
 
-print(HammingLoss(label, pred))
+# print(HammingLoss(label, pred))
